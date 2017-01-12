@@ -26,7 +26,7 @@ public enum GraphQLBuilder
         }
         else if case .object(let name, let fields) = self
         {
-            if let name = name, name.isEmpty == false
+            if let name = name
             {
                 return name + "{" + fields.map { $0.build() }.joined(separator: ",") + "}"
             }
