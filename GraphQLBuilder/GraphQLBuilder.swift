@@ -11,9 +11,9 @@ import Foundation
 public enum GraphQLBuilder
 {
     case field(String)
-    case object(String, [GraphQLBuilder])
+    case object(String?, [GraphQLBuilder])
     
-    public static func query(_ qs: [GraphQLBuilder], rootKey: String = "query") -> GraphQLBuilder
+    public static func query(rootKey: String? = "query", _ qs: [GraphQLBuilder]) -> GraphQLBuilder
     {
         return .object(rootKey, qs)
     }
@@ -26,7 +26,15 @@ public enum GraphQLBuilder
         }
         else if case .object(let name, let fields) = self
         {
-            return name + "{" + fields.map { $0.build() }.joined(separator: ",") + "}"
+            if let name = name, name.isEmpty == false
+            {
+                return name + "{" + fields.map { $0.build() }.joined(separator: ",") + "}"
+            }
+            else
+            {
+                return fields.map { $0.build() }.joined(separator: ",")
+                
+            }
         }
         else
         {
